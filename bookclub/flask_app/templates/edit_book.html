@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <h1 class="navbar-brand text-center">Welcome {{user.first_name}}!</h1>        
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
+    <!-- body -->
+    <div class="container">
+        <form action="/update/{{book.id}}" method="post" class="mx-auto col-8 p-4 bg-dark text-light">
+            {% for message in get_flashed_messages(category_filter=['new_show']) %}
+                <h4 class="alert alert-danger">{{ message }}</h4>
+            {% endfor %}
+            {% with messages = get_flashed_messages(category_filter=['band']) %}
+                {% if messages %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>ERROR!!!!</strong>
+                        {% for message in messages %}
+                        <p>{{message}}</p>
+                        {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+            <h2>Edit {{book.title}}</h2>
+            <input type="hidden" name="user_id">
+            <div class="form-group">
+                <label for="name">Book Name:</label>
+                <input value="{{book.title}}" type="text" name="title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="genre">Added By:</label>
+                <input type="text" name="first_name" class="form-control" value="{{book.creator.first_name}}">
+            </div>
+            <div class="form-group">
+                <label for="added_on">Added on:</label>
+                <input type="text" name="name" class="form-control" value='{{book.created_at.strftime("%b %d %Y")}}'>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <input value="{{book.description}}" type="text" name="description" class="form-control">
+            </div>
+            {% if book.user_id == user.id %}
+            <a href="/delete/{{ band.id }}">Delete</a>
+            <input type="submit" value="Update" class="btn btn-primary">
+        {% endif %}
+        </form>
+    </div>
+</body>
+</html>
